@@ -1,3 +1,5 @@
+const { parse } = require("@babel/core")
+
 const artists = [
   {
     "id": 0,
@@ -208,17 +210,17 @@ Practice accessing data above by console.log-ing following items:
 (no functions needed) */
 
 //(1) Name of the first artist (0th index) in the array
-
+console.log('Task 1:', artists[0].name)
 
 //(2) Bio of the third artist (2nd index) in the array 
-
+console.log('Task 2:', artists[2].bio)
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 (no function needed) 
 There is a typo in your dataset 😱 The 9th artist, Vincent Van Gogh is currently Vincent Van Dough. Fix this issue and console.log() to check your work. */
-
-
+artists[8].name = 'Vincent Van Dough'
+console.log('Task 2:', artists[8].name)
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 3: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀  
 Use getArtistByIndex to do the following:
@@ -228,10 +230,10 @@ Use getArtistByIndex to do the following:
 
 Example, if getArtistByIndex is invoked with the artists array and the number 0, it will return `the artist at index 0 is Amedeo Modigliani` */
 
-function getArtistByIndex(/*Your Code Here*/) {
-  /*Your Code Here*/
+function getArtistByIndex(array, number) {
+  return `the artist at index ${array[number].id} is ${array[number].name}`
 }
-
+console.log('Task 3:', getArtistByIndex(artists, 0))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 4: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
@@ -243,9 +245,29 @@ Example born in 1901 and died in 1959 - included -- born in 1889 and died in 192
 If correct, the function should return ["Salvador Dali", "Frida Kahlo"]*/
 // Hint - Look up the .split() method
 
-function get20s(/*Your Code Here*/) {
-  /*Your Code Here*/
+function get20s(array) {
+  /**
+   * 1. create a new array that will store the result - line 252
+   * 2. looped through the artists array, then for each artist in the array, we retrieved the years atribute/property
+   *    i split() the years (string: format "1900 - 2000") and stored the death and birth dates 
+   * 3. i used an if conditional to get the artist from the 20th century 
+   */
+  const result = []
+  array.forEach(el => {
+    const birthdateInString = `${el.years.split("-")[0]}` // year[0] - birth
+    const deathdateInString = `${el.years.split("-")[1]}` // year[1] - death
+
+    const birth = parseInt(birthdateInString) // parseInt() converts string to integer, parseFloat()
+    const death = parseInt(deathdateInString)
+
+    if(birth > 1901 && death < 2000)  {
+      result.push(el.name) 
+    }
+  });
+  return result
 }
+
+console.log("Task 4: " + get20s(artists))
 
 
 
@@ -258,10 +280,11 @@ Use removeArtist to do the following:
 
 For example, if removeArtist is invoked with the artists array and the number 0, it will remove Amedeo Modigliani from our dataset and return the number 19. */
 
-function removeArtist(/*Your Code Here*/) {
-  /*Your Code Here*/
+function removeArtist(array, number) {
+  array.splice(0, 1)
+  return array.length
 }
-
+console.log('Task 5:', artists)
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use addArtist to do the following: 
@@ -279,9 +302,11 @@ Use addArtist to do the following:
 
 Example: addArtist(artists) should return the artists array with the above object added to the end of the array. */
 
-function addArtist(/*Your Code Here*/) {
-  /*Your Code Here*/
+function addArtist(array) {
+  array.push(20, 'Sam Daramola', '2001 - 2022', 'Web Design', 'Nigeria', 'An Nigeria American that attends Morgan State University')
+  return array
 }
+console.log('Task 6:', artists)
 
 
 
@@ -292,10 +317,17 @@ Use lotsOfArt to do the following:
 
 For example lotsOfArt(artists); will return ["Amedeo Modigliani", "Rene Magritte", ... "Albrecht Dürer"]*/
 
-function lotsOfArt(/*Your Code Here*/) {
-  /*Your Code Here*/
+function lotsOfArt(array) {
+  const result = [] // create empty array 
+  // callback functions
+  array.forEach(artist => {
+    if(parseInt(artist.paintings) > 100){
+      result.push(artist.name)
+    }
+  })
+  return result
 }
-
+console.log("Task 7: ", lotsOfArt(artists))
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 8: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Use artistInfo to do the following: 
@@ -306,10 +338,13 @@ Use artistInfo to do the following:
 For example artistInfo(artists, 'Frida Kahlo') will return: 
   ["Frida Kahlo de Rivera (Spanish pronunciation: [ˈfɾiða ˈkalo]; born Magdalena Carmen Frida Kahlo y Calderón; 6 July 1907 – 13 July 1954) was a Mexican artist who painted many portraits, self-portraits and works inspired by the nature and artifacts of Mexico. Inspired by the country's popular culture, she employed a naïve folk art style to explore questions of identity, postcolonialism, gender, class and race in Mexican society. Her paintings often had strong autobiographical elements and mixed realism with fantasy. In addition to belonging to the post-revolutionary Mexicayotl movement, which sought to define a Mexican identity, Kahlo has been described as a surrealist or magical realist.Born to a German father and a mestiza mother, Kahlo spent most of her childhood and adult life at her family home in Coyoacán, La Casa Azul, now known and publicly accessible as the Frida Kahlo Museum. She was disabled by polio as a child. Until a traffic accident at age eighteen caused lifelong pain and medical problems, she had been a promising student headed for medical school. During her recovery, she returned to her childhood hobby of art with the idea of becoming an artist."]
 */
-function artistInfo(/*Your Code Here*/){
-  /*Your Code Here*/
+function artistInfo(array, name){
+  const result = [] // create new array
+  const artistBio = array.find(artist => artist.name == name).bio // find an artist that has this name (string: parameter)
+  result.push(artistBio)
+  return result
 }
-
+console.log("Task 8: " + artistInfo(artists, 'Kazimir Malevich'))
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 9: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -318,13 +353,19 @@ Use artistByCountry to do the following:
 2. Receive a nationality
 3. returns a list of artists from that country
 
-For example artistByCountry(artists, 'Spanish') will return: [ 'Salvador Dali', 'Pablo Picasso', 'Francisco Goya']
+For example artistByCountry(artists, 'Spanish') will return: [ 'Salvador Dali', 'Pablo Picasso', 'Francisco Goya', 'El Greco' ]
 */
 
-function artistByCountry(/*Your Code Here*/){
-  /*Your Code Here*/
+function artistByCountry(array, nationality) {
+  const result = []
+  array.forEach(artist => {
+    if(artist.nationality.toLowerCase() === nationality.toLowerCase()){
+      result.push(artist.name)
+    }
+  })
+  return result
 }
-
+console.log("Task 9: ", artistByCountry(artists, 'Spanish'))
 
 
 /* ***** END OF TASKS ***** */
